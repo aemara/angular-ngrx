@@ -1,0 +1,12 @@
+<label>Book name:</label><br />
+<input type="text" [(ngModel)]="bookName"/><br />
+<label>Author:</label><br />
+<input type="text" [(ngModel)]="bookAuthor"/><br /><br />
+<button (click)="addBook()">Add Book</button>
+
+<div *ngFor="let book of books$ | async">
+  {{ book.name }} -
+  {{ book.author }}
+</div>
+
+<h2>{{bookName}} - {{bookAuthor}}</h2>
