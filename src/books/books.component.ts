@@ -14,13 +14,14 @@ export class BooksComponent implements OnInit {
   books$ = this.booksStore.books$;
   constructor(private readonly booksStore: BooksStore) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   addBook() {
     const book: Book = {
+      id: this.bookName,
       name: this.bookName,
       author: this.bookAuthor,
     };
-    this.booksStore.addBook(book);
   }
 }
