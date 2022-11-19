@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ComponentStore } from "@ngrx/component-store";
-import { map, Observable } from "rxjs";
+import { catchError, EMPTY, map, Observable, switchMap, tap } from "rxjs";
 import { BooksService } from "../services/books.service";
 import { Book } from "../models/book";
 export interface BooksState {
@@ -15,20 +15,32 @@ export class BooksStore extends ComponentStore<BooksState> {
     const initialState: BooksState = {
       books: [],
     };
-    booksService.getBooks().subscribe((book: Book) => {
-      initialState.books.push(book);
+    booksService.getBooks().subscribe((books: Book[]) => {
+      initialState.books = [...books];
+      this.setState(initialState);
     });
-    super(initialState);
+    super();
   }
 
-  addBook(book: Book) {
-    this.setState((state) => {
-      return {
-        ...state,
-        books: [...state.books, book],
-      };
-    });
-
-    this.booksService.addBook(book);
-  }
+  addBook = this.effect((book$: Observable<Book>) =>
+    book$.pipe(
+      switchMap((book) =>
+        this.booksService.addBook(book).pipe(
+          tap({
+            next: (addedBook) =>
+              this.setState((state: any) => {
+                return {
+                  ...state,
+                  books: [...state.books, addedBook],
+                };
+              }),
+            error: (err) => {
+              console.log("error");
+            },
+          }),
+          catchError(() => EMPTY)
+        )
+      )
+    )
+  );
 }
