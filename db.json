@@ -1,0 +1,31 @@
+{
+  "books": [
+    {
+      "name": "The Road",
+      "author": "Cormac McCarthy"
+    },
+    {
+      "name": "Crime and Punishment",
+      "author": "Fyodor Dostoevsky"
+    },
+    {
+      "name": "The Secret History",
+      "author": "Donna Tartt"
+    },
+    {
+      "id": 1,
+      "name": "The Hobbit",
+      "author": "Tolkien"
+    },
+    {
+      "id": "The Hobbit",
+      "name": "The Hobbit",
+      "author": "Tolkien"
+    },
+    {
+      "id": "Sense and Sensibility",
+      "name": "Sense and Sensibility",
+      "author": "Jane Austen"
+    }
+  ]
+}

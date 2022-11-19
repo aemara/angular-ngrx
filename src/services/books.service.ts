@@ -1,33 +1,17 @@
 import { Injectable } from "@angular/core";
-import { from, of } from "rxjs";
+import { from, Observable, of } from "rxjs";
 import { Book } from "../models/book";
+import { HttpClient } from "@angular/common/http";
+
 @Injectable()
 export class BooksService {
-  constructor() {}
-
-  listOfBooks: Book[] = [
-    {
-      name: "The Road",
-      author: "Cormac McCarthy",
-    },
-    {
-      name: "Crime and Punishment",
-      author: "Fyodor Dostoevsky",
-    },
-    {
-      name: "The Secret History",
-      author: "Donna Tartt",
-    },
-  ];
+  constructor(private http: HttpClient) {}
 
   getBooks() {
-    const books$ = from(this.listOfBooks);
-    return books$;
+    return this.http.get("http://localhost:3000/books");
   }
 
   addBook(book: Book) {
-    this.listOfBooks.push(book);
-    console.log("book was added");
-    console.log(this.listOfBooks);
+    return this.http.post("http://localhost:3000/books", book);
   }
 }
