@@ -23,5 +23,7 @@ export class BooksComponent implements OnInit {
       name: this.bookName,
       author: this.bookAuthor,
     };
+
+    this.booksStore.addBook(book);
   }
 }
