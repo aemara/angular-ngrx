@@ -5,21 +5,27 @@ import { BooksService } from "../services/books.service";
 import { Book } from "../models/book";
 export interface BooksState {
   books: Book[];
+  isLoading: boolean;
 }
 
 @Injectable()
 export class BooksStore extends ComponentStore<BooksState> {
   readonly books$: Observable<Book[]> = this.select((state) => state.books);
+  readonly isLoading$: Observable<Boolean> = this.select((state) => state.isLoading);
 
   constructor(private booksService: BooksService) {
     const initialState: BooksState = {
       books: [],
+      isLoading: true,
     };
+    super();
+    this.setState(initialState)
     booksService.getBooks().subscribe((books: Book[]) => {
       initialState.books = [...books];
+      initialState.isLoading = false;
       this.setState(initialState);
     });
-    super();
+    
   }
 
   addBook = this.effect((book$: Observable<Book>) =>
