@@ -4,13 +4,16 @@
 <input type="text" [(ngModel)]="bookAuthor" /><br /><br />
 <button (click)="addBook()">Add Book</button>
 
-<div *ngIf="isLoading$ | async" class="loading">
+<div *ngIf="isLoading$ | async" class="loading-indicator">
   Loading...
 </div>
-<div *ngFor="let book of books$ | async">
-  {{ book.name }} -
-  {{ book.author }}
-  <button type="button" (click)="deleteBook(book.id)">Delete book</button>
-</div> 
+
+<div *ngIf="!(isLoading$ | async)" class="books-container">
+  <div *ngFor="let book of books$ | async">
+    {{ book.name }} -
+    {{ book.author }}
+    <button type="button" (click)="deleteBook(book.id)">Delete book</button>
+  </div>
+</div>
 
 <h2>{{ bookName }} - {{ bookAuthor }}</h2>
