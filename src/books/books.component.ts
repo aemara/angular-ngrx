@@ -12,6 +12,7 @@ export class BooksComponent implements OnInit {
   bookName: string;
   bookAuthor: string;
   books$ = this.booksStore.books$;
+  isLoading$ = this.booksStore.isLoading$;
   constructor(private readonly booksStore: BooksStore) {}
 
   ngOnInit() {
@@ -25,5 +26,9 @@ export class BooksComponent implements OnInit {
     };
 
     this.booksStore.addBook(book);
+  }
+
+  deleteBook(bookId: string) {
+    this.booksStore.deleteBook(bookId);
   }
 }

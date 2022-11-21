@@ -14,4 +14,8 @@ export class BooksService {
   addBook(book: Book) {
     return this.http.post("http://localhost:3000/books", book);
   }
+
+  deleteBook(id: string) {
+    return this.http.delete(`http://localhost:3000/books/${id}`);
+  }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ComponentStore } from "@ngrx/component-store";
+import { ComponentStore, tapResponse } from "@ngrx/component-store";
 import { catchError, EMPTY, map, Observable, switchMap, tap } from "rxjs";
 import { BooksService } from "../services/books.service";
 import { Book } from "../models/book";
@@ -11,7 +11,9 @@ export interface BooksState {
 @Injectable()
 export class BooksStore extends ComponentStore<BooksState> {
   readonly books$: Observable<Book[]> = this.select((state) => state.books);
-  readonly isLoading$: Observable<Boolean> = this.select((state) => state.isLoading);
+  readonly isLoading$: Observable<Boolean> = this.select(
+    (state) => state.isLoading
+  );
 
   constructor(private booksService: BooksService) {
     const initialState: BooksState = {
@@ -19,13 +21,12 @@ export class BooksStore extends ComponentStore<BooksState> {
       isLoading: true,
     };
     super();
-    this.setState(initialState)
+    this.setState(initialState);
     booksService.getBooks().subscribe((books: Book[]) => {
       initialState.books = [...books];
       initialState.isLoading = false;
       this.setState(initialState);
     });
-    
   }
 
   addBook = this.effect((book$: Observable<Book>) =>
@@ -45,6 +46,29 @@ export class BooksStore extends ComponentStore<BooksState> {
             },
           }),
           catchError(() => EMPTY)
+        )
+      )
+    )
+  );
+
+  deleteBook = this.effect((bookId$: Observable<string>) =>
+    bookId$.pipe(
+      switchMap((bookId) =>
+        this.booksService.deleteBook(bookId).pipe(
+          tapResponse(
+            (success) => {
+              this.setState((state) => {
+                let updatedBooks = state.books.filter(
+                  (book) => book.id !== bookId
+                );
+                return {
+                  ...state,
+                  books: updatedBooks,
+                };
+              });
+            },
+            (error) => console.log(error)
+          )
         )
       )
     )
