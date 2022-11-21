@@ -31,6 +31,11 @@ export class BooksStore extends ComponentStore<BooksState> {
 
   addBook = this.effect((book$: Observable<Book>) =>
     book$.pipe(
+      tap(() => {
+        this.setState((state) => {
+          return { ...state, isLoading: true };
+        });
+      }),
       switchMap((book) =>
         this.booksService.addBook(book).pipe(
           tap({
@@ -39,6 +44,7 @@ export class BooksStore extends ComponentStore<BooksState> {
                 return {
                   ...state,
                   books: [...state.books, addedBook],
+                  isLoading: false,
                 };
               }),
             error: (err) => {
